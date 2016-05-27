@@ -52,9 +52,23 @@ public class PoslanikTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Object getValueAt(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Poslanik p = poslanici.get(rowIndex);
+		switch (columnIndex) {
+		case 0:
+			return p.getId();
+		case 1:
+			return p.getIme();
+		case 2:
+			return p.getPrezime();
+		case 3:
+			if (p.getDatumRodjenja() != null) {
+				return sdf.format(p.getDatumRodjenja());
+			}
+			return "";
+		default:
+			return "Greska, getValueAt";
+		}
 	}
 
 	@Override

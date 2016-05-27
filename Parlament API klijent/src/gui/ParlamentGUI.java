@@ -1,7 +1,9 @@
 package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import domen.Poslanik;
 import gui.models.PoslanikTableModel;
 
 public class ParlamentGUI extends JFrame {
@@ -27,21 +30,7 @@ public class ParlamentGUI extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JTextArea textAreaStatus;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ParlamentGUI frame = new ParlamentGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
@@ -97,6 +86,13 @@ public class ParlamentGUI extends JFrame {
 	private JButton getBtnGetMembers() {
 		if (btnGetMembers == null) {
 			btnGetMembers = new JButton("GET members");
+			btnGetMembers.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					GUIKontroler.vratiISerijalizujPoslanike();
+					textAreaStatus.append("Poslanici uspesno preuzeti sa servisa.\n");
+					
+				}
+			});
 			btnGetMembers.setPreferredSize(new Dimension(115, 23));
 		}
 		return btnGetMembers;
@@ -104,6 +100,17 @@ public class ParlamentGUI extends JFrame {
 	private JButton getBtnFillTable() {
 		if (btnFillTable == null) {
 			btnFillTable = new JButton("Fill table");
+			btnFillTable.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					
+					List<Poslanik> poslanici = GUIKontroler.vratiListuPoslanika(); 
+					PoslanikTableModel tbm = (PoslanikTableModel) table.getModel();
+					tbm.osveziTabelu(poslanici);
+
+					textAreaStatus.append("Tabela je popunjena sa podacima preuzetim sa servisa.");
+					
+				}
+			});
 			btnFillTable.setPreferredSize(new Dimension(115, 23));
 		}
 		return btnFillTable;
@@ -111,6 +118,15 @@ public class ParlamentGUI extends JFrame {
 	private JButton getBtnUpdateMembers() {
 		if (btnUpdateMembers == null) {
 			btnUpdateMembers = new JButton("Update members");
+			btnUpdateMembers.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					PoslanikTableModel tbm = (PoslanikTableModel) table.getModel();
+					List<Poslanik> poslanici = tbm.vratiListu();
+					GUIKontroler.serijalizujPromenu(poslanici);
+					textAreaStatus.append("Izmenjeni podaci su sacuvani.\n");
+					
+				}
+			});
 			btnUpdateMembers.setPreferredSize(new Dimension(115, 23));
 		}
 		return btnUpdateMembers;
